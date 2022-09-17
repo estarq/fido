@@ -1,4 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-    <p>index.html</p>
+    {% for dog in dogs %}
+        <div>
+            <img src="{{ dog.img.url }}" alt="The image of {{ dog.name }}">
+            <p>{{ dog.name }}</p>
+            <p>{{ dog.short_desc }}</p>
+        </div>
+    {% endfor %}
 {% endblock content %}
