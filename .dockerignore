@@ -1,8 +1,12 @@
 compose.dev.yaml
+compose.prod.yaml
 dev.env
 Dockerfile
 .dockerignore
 .git
 .gitignore
 .idea
+nginx
+prod.env
+staticfiles
 venv
