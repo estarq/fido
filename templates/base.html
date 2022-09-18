@@ -14,6 +14,93 @@
     <link rel="stylesheet" href="{% static 'fido/pixel.min.css' %}">
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-dark navbar-theme-primary mb-4">
+    <div class="container position-relative">
+        <a class="navbar-brand mr-lg-3" href="/">
+            <img class="navbar-brand-dark" src="{% static 'fido/logo.svg' %}" alt="logo" style="filter: invert(1)">
+        </a>
+        <div class="navbar-collapse collapse" id="navbar-default-primary">
+            <div class="navbar-collapse-header">
+                <div class="row">
+                    <div class="col-6 collapse-brand">
+                        <a href="#">
+                            <img src="{% static 'fido/logo.svg' %}" alt="logo">
+                        </a>
+                    </div>
+                    <div class="col-6 collapse-close">
+                        <i class="fas fa-times" data-toggle="collapse" role="button"
+                           data-target="#navbar-default-primary" aria-controls="navbar-default-primary"
+                           aria-expanded="false" aria-label="Toggle navigation"></i>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav navbar-nav-hover align-items-lg-center ml-4">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link" data-toggle="dropdown"
+                       aria-controls="support_submenu" aria-expanded="false"
+                       aria-label="Toggle support menu item">
+                        <span class="nav-link-inner-text">Adopt</span>
+                        <span class="fas fa-angle-down nav-link-arrow ml-2"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg" id="support_submenu">
+                        <div class="col-auto px-0" data-dropdown-content="">
+                            <div class="list-group list-group-flush">
+                                <a href="#"
+                                   class="list-group-item list-group-item-action d-flex align-items-center p-0 py-3 px-lg-4">
+                                    <span class="icon icon-sm icon-secondary">
+                                        <span class="fas fa-dog"></span>
+                                    </span>
+                                    <div class="ml-4">
+                                        <span class="text-dark d-block">Dog</span>
+                                        <span class="small">Browse all dogs</span>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                   class="list-group-item list-group-item-action d-flex align-items-center p-0 py-3 px-lg-4">
+                                    <span class="icon icon-sm icon-primary">
+                                        <span class="fas fa-cat"></span>
+                                    </span>
+                                    <div class="ml-4">
+                                        <span class="text-dark d-block">Cat</span>
+                                        <span class="small">Browse all cats</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">For Shelters</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Contact</a>
+                </li>
+                <li class="nav-item d-lg-none">
+                    <a href="#" class="nav-link">Sign up</a>
+                </li>
+                <li class="nav-item d-lg-none">
+                    <a href="#" class="nav-link">Log in</a>
+                </li>
+            </ul>
+        </div>
+        <div class="d-none d-sm-none d-md-none d-lg-block">
+            <div class="d-flex align-items-center">
+                <a href="#" class="btn btn-outline-white ml-md-3">Sign up</a>
+                <a href="#" class="btn btn-primary btn-white ml-md-3">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Log in
+                </a>
+            </div>
+        </div>
+        <div class="d-flex align-items-center">
+            <button class="navbar-toggler ml-2" type="button" data-toggle="collapse"
+                    data-target="#navbar-default-primary" aria-controls="navbar-default-primary"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </div>
+</nav>
 {% block content %}{% endblock content %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"
         integrity="sha512-eHWYortWe2NyxHIiY/wY82nK4RlPIDDDSD5ZvTHrTkiq9tAe++DBhq5rDcC02xqHxh0ctGGMbHKotqtYcYgXZA=="
