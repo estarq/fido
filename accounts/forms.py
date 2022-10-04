@@ -1,12 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django.forms.utils import ErrorList
 from django.utils.safestring import mark_safe
 
+from .models import User
+
 
 class NewUserForm(UserCreationForm):
-    username = forms.CharField(required=False)
     email = forms.EmailField()
     password1 = forms.PasswordInput()
     password2 = forms.PasswordInput()
@@ -14,19 +14,12 @@ class NewUserForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'consent']
+        fields = ['email', 'password1', 'password2', 'consent']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in ['email', 'password1', 'password2']:
             self.fields[field].widget.attrs['class'] = 'form-control'
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.username = self.cleaned_data['email']
-        if commit:
-            user.save()
-        return user
 
 
 class ErrorAlerts(ErrorList):
@@ -34,7 +27,7 @@ class ErrorAlerts(ErrorList):
         return '' if not self else mark_safe(
             ''.join(
                 '<div class="alert alert-danger mt-n2" role="alert">'
-                f'<span class="alert-inner--text" style="margin-left: -0.75rem !important">{err}</span>'
+                f'<div class="alert-inner--text" style="margin-left: -0.75rem !important">{err}</div>'
                 '</div>'
                 for err in self
             )
