@@ -17,4 +17,5 @@ urlpatterns = [
         ),
         name='login',
     ),
+    path('logout/', auth_views.LogoutView.as_view(next_page='fido:homepage'), name='logout'),
 ]
