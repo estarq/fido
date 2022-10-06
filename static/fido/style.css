@@ -1,0 +1,8 @@
+#account-menu-container .dropdown-item {
+    color: #1c2540;
+    font-weight: 400;
+}
+
+#account-menu-container .dropdown-item:hover {
+    background-color: rgba(36, 46, 76, .1);
+}
