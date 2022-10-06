@@ -80,14 +80,14 @@
                         <a href="{% url 'accounts:register' %}" class="nav-link">Sign up</a>
                     </li>
                     <li class="nav-item d-lg-none">
-                        <a href="#" class="nav-link">Log in</a>
+                        <a href="{% url 'accounts:login' %}" class="nav-link">Log in</a>
                     </li>
                 </ul>
             </div>
             <div class="d-none d-sm-none d-md-none d-lg-block">
                 <div class="d-flex align-items-center">
                     <a href="{% url 'accounts:register' %}" class="btn btn-outline-white ml-md-3">Sign up</a>
-                    <a href="#" class="btn btn-primary btn-white ml-md-3">
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-white ml-md-3">
                         <i class="fas fa-sign-in-alt mr-2"></i>
                         Log in
                     </a>

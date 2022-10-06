@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.forms.utils import ErrorList
 from django.utils.safestring import mark_safe
 
@@ -19,6 +19,14 @@ class NewUserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in ['email', 'password1', 'password2']:
+            self.fields[field].widget.attrs['class'] = 'form-control'
+
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        kwargs.update(error_class=ErrorAlerts)
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
 
 
