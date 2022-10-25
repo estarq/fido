@@ -123,6 +123,70 @@
     </nav>
 {% endblock navbar %}
 {% block content %}{% endblock content %}
+{% block footer %}
+    <footer class="footer bg-primary text-white pb-6 pt-1">
+        <div class="container">
+            <div class="row mt-6 justify-content-center pl-5 pl-sm-0">
+                <div class="col-md-4 mr-3">
+                    <p>
+                        <strong>Fido</strong> is an online service that makes it easy to find adoptable dogs and cats
+                        near you. It's free for both shelters and pet lovers.
+                    </p>
+                    <ul class="social-buttons mb-5 mb-lg-0">
+                        <li>
+                            <a href="#" class="icon icon-xs icon-white" aria-label="twitter social link">
+                                <span class="fab fa-twitter"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="icon icon-xs icon-white" aria-label="facebook social link">
+                                <span class="fab fa-facebook"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="icon icon-xs icon-white" aria-label="instagram social link">
+                                <span class="fab fa-instagram"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="icon icon-xs icon-white" aria-label="youtube social link">
+                                <span class="fab fa-youtube"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md-2 mb-5 mb-lg-0">
+                    <h3 class="h5">Fido</h3>
+                    <ul class="links-vertical">
+                        <li><a href="{% url 'fido:homepage' %}">Homepage</a></li>
+                        <li><a href="#">For Shelters</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md-2 mb-5 mb-lg-0">
+                    <h3 class="h5">Adopt</h3>
+                    <ul class="links-vertical">
+                        <li><a href="#">Dogs</a></li>
+                        <li><a href="#">Cats</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-2 mt-lg-6">
+                <div class="col mb-md-0">
+                    <a href="{% url 'fido:homepage' %}" class="d-flex justify-content-center">
+                        <img src="{% static 'fido/logo.svg' %}" class="mb-3" alt="logo"
+                             style="height: 25px; filter: invert(1)">
+                    </a>
+                    <div class="d-flex text-center justify-content-center align-items-center" role="contentinfo">
+                        <p class="font-weight-normal font-small mb-0">
+                            Copyright &copy; Fido {% now 'Y' %}. All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock footer %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js"
         integrity="sha512-eHWYortWe2NyxHIiY/wY82nK4RlPIDDDSD5ZvTHrTkiq9tAe++DBhq5rDcC02xqHxh0ctGGMbHKotqtYcYgXZA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
