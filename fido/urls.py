@@ -21,4 +21,5 @@ app_name = 'fido'
 
 urlpatterns = [
     path('', views.index, name='homepage'),
+    path('for-shelters/', views.for_shelters, name='for-shelters'),
 ]

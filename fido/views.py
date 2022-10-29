@@ -6,3 +6,7 @@ from fido.models import Dog
 def index(request):
     dogs = Dog.objects.all()
     return render(request, 'fido/index.html', {'dogs': dogs})
+
+
+def for_shelters(request):
+    return render(request, 'fido/for-shelters.html')
