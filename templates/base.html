@@ -16,10 +16,10 @@
 </head>
 <body>
 {% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-transparent navbar-dark navbar-theme-primary mb-4">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-transparent navbar-dark navbar-theme-primary">
         <div class="container position-relative">
             <a class="navbar-brand mr-lg-3" href="/">
-                <img class="navbar-brand-dark" src="{% static 'fido/logo.svg' %}" alt="logo" style="filter: invert(1)">
+                <img class="navbar-brand-dark filter-invert" src="{% static 'fido/logo.svg' %}" alt="logo">
             </a>
             <div class="navbar-collapse collapse" id="navbar-default-primary">
                 <div class="navbar-collapse-header">
@@ -124,7 +124,7 @@
 {% endblock navbar %}
 {% block content %}{% endblock content %}
 {% block footer %}
-    <footer class="footer bg-primary text-white pb-6 pt-1">
+    <footer class="footer bg-primary text-white pb-6 pt-1 {% if request.path == '/' %}pt-7 mt-n7{% endif %}">
         <div class="container">
             <div class="row mt-6 justify-content-center pl-5 pl-sm-0">
                 <div class="col-md-4 mr-3">
@@ -174,8 +174,8 @@
             <div class="row mt-2 mt-lg-6">
                 <div class="col mb-md-0">
                     <a href="{% url 'fido:homepage' %}" class="d-flex justify-content-center">
-                        <img src="{% static 'fido/logo.svg' %}" class="mb-3" alt="logo"
-                             style="height: 25px; filter: invert(1)">
+                        <img src="{% static 'fido/logo.svg' %}" class="mb-3 filter-invert" alt="logo"
+                             style="height: 25px">
                     </a>
                     <div class="d-flex text-center justify-content-center align-items-center" role="contentinfo">
                         <p class="font-weight-normal font-small mb-0">

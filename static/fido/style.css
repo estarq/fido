@@ -6,3 +6,11 @@
 #account-menu-container .dropdown-item:hover {
     background-color: rgba(36, 46, 76, .1);
 }
+
+.filter-invert {
+    filter: invert(1);
+}
+
+#signature {
+    width: 150px;
+}

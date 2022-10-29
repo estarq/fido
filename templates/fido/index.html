@@ -1,10 +1,197 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-    {% for dog in dogs %}
-        <div>
-            <img src="{{ dog.img.url }}" alt="The image of {{ dog.name }}">
-            <p>{{ dog.name }}</p>
-            <p>{{ dog.short_desc }}</p>
+    <section class="section-header bg-primary text-white">
+        <div class="container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-12 col-md-7 col-lg-6 text-center text-md-left">
+                    <h1 class="display-2 mb-4">
+                        Looking for
+                        <br class="d-none d-md-inline">
+                        your dream pet?
+                    </h1>
+                    <p class="lead mb-4 text-muted">
+                        Search among tens of thousands of cats and dogs by sex, breed, or location.
+                        All of them with photos!
+                    </p>
+                    <a href="#" class="btn btn-outline-white mr-3">
+                        <span class="fas fa-cat mr-2"></span>
+                        Cats
+                    </a>
+                    <a href="#" class="btn btn-outline-white">
+                        <span class="fas fa-dog mr-2"></span>
+                        Dogs
+                    </a>
+                </div>
+                <div class="col-12 col-md-5 d-none d-md-block text-center">
+                    <img class="filter-invert" src="{% static 'fido/dog-cat.svg' %}" alt="dog and cat">
+                </div>
+            </div>
         </div>
-    {% endfor %}
+    </section>
+    <section class="section section-lg">
+        <div class="container">
+            <div class="row align-items-center justify-content-around">
+                <div class="col-md-6 col-xl-6 my-5 mt-sm-0 d-none d-sm-block">
+                    <img class="rounded img-fluid effect-img-1" src="{% static 'fido/couple-dog.jpg' %}"
+                         alt="a couple with a dog">
+                    <img class="rounded img-fluid effect-img-2" src="{% static 'fido/girl-dog.jpg' %}"
+                         alt="a girl with a dog">
+                </div>
+                <div class="col-md-6 col-xl-5 text-center text-md-left">
+                    <h2 class="h1 mb-5 font-weight-light">
+                        Every pet,
+                        <br>
+                        <span class="font-weight-bold">deserves a home.</span>
+                    </h2>
+                    <p class="lead">
+                        There are currently over two million animals in shelters in the United States, and that number
+                        is growing by over a thousand each day. All animals awaiting adoption are examined, dewormed and
+                        vaccinated against rabies.
+                    </p>
+                    <p class="lead">
+                        If you are thinking about purchasing a pet, please consider adoption because every pet deserves
+                        a forever home.
+                    </p>
+                    <img id="signature" src="{% static 'fido/signature.png' %}" alt="signature" class="mt-4">
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="section section-md bg-soft">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <span class="d-block mb-2">
+                        <span class="star fas fa-star text-warning"></span>
+                        <span class="star fas fa-star text-warning"></span>
+                        <span class="star fas fa-star text-warning"></span>
+                        <span class="star fas fa-star text-warning"></span>
+                        <span class="star fas fa-star text-warning"></span>
+                    </span>
+                    <blockquote class="blockquote">
+                        Thanks to Fido, we have a new family member.
+                        It is exactly what our daughter dreamed of, big and furry!
+                        <footer class="blockquote-footer mt-3 text-primary">Ivy Bailey</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section section-sm py-0 mt-5 mt-md-n5 d-none d-md-block">
+        <div class="container top-0 right-o left-0 z-2">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="bg-white border border-light rounded-pill py-4">
+                        <ul class="d-flex flex-wrap justify-content-center list-unstyled mb-0">
+                            <li class="mx-xl-4 mx-3 d-flex align-items-center">
+                                <h2 class="h5 m-0 mb-4 mb-md-0 text-gray">Our sponsors</h2>
+                            </li>
+                            <li class="mx-xl-4 mx-3 mb-3 mb-md-0">
+                                <img class="img-fluid image-sm" src="{% static 'fido/paypal.svg' %}" alt="paypal logo">
+                            </li>
+                            <li class="mx-xl-4 mx-3 mb-3 mb-md-0">
+                                <img class="img-fluid image-sm" src="{% static 'fido/airbnb.svg' %}" alt="airbnb logo">
+                            </li>
+                            <li class="mx-xl-4 mx-3 mb-3 mb-md-0">
+                                <img class="img-fluid image-sm" src="{% static 'fido/forbes.svg' %}" alt="forbes logo">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="section section-md">
+        <div class="container">
+            <div class="row text-center justify-content-center">
+                <div class="col-md-8 mb-5">
+                    <h2>Frequently asked questions</h2>
+                    <p class="lead">Find the answer to your question</p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="accordionExample1">
+                        <div class="card card-sm card-body border-light mb-0">
+                            <a href="#panel-1" data-target="#panel-1" class="accordion-panel-header collapsed"
+                               data-toggle="collapse" role="button" aria-expanded="false" aria-controls="panel-1">
+                                <span class="h6 mb-0 font-weight-bold">What is Fido?</span>
+                                <span class="icon">
+                                    <span class="fas fa-plus"></span>
+                                </span>
+                            </a>
+                            <div class="collapse" id="panel-1">
+                                <div class="pt-3">
+                                    <p class="mb-0">
+                                        Fido is a website connecting shelters with people willing to adopt. Its search
+                                        engine makes it easy and fast to search among tens of thousands of cats and dogs
+                                        by sex, breed, or location.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-sm card-body border-light mb-0">
+                            <a href="#panel-2" data-target="#panel-2" class="accordion-panel-header collapsed"
+                               data-toggle="collapse" role="button" aria-expanded="false" aria-controls="panel-2">
+                                <span class="h6 mb-0 font-weight-bold">Is it free?</span>
+                                <span class="icon">
+                                    <span class="fas fa-plus"></span>
+                                </span>
+                            </a>
+                            <div class="collapse" id="panel-2">
+                                <div class="pt-3">
+                                    <p class="mb-0">
+                                        Yes, it is thanks to our sponsors - PayPal, Airbnb, and Forbes.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-sm card-body border-light">
+                            <a href="#panel-3" data-target="#panel-3" class="accordion-panel-header"
+                               data-toggle="collapse" role="button" aria-expanded="false" aria-controls="panel-3">
+                                <span class="h6 mb-0 font-weight-bold">How can I help?</span>
+                                <span class="icon">
+                                    <span class="fas fa-plus"></span>
+                                </span>
+                            </a>
+                            <div class="collapse" id="panel-3">
+                                <div class="pt-3">
+                                    <p class="mb-0">
+                                        Currently, we do not need help with the site. If you would like to help, please
+                                        volunteer at your local shelter.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section py-0">
+        <div class="container z-2">
+            <div class="row position-relative justify-content-center align-items-center">
+                <div class="col-12">
+                    <div class="card border-light px-4 py-1">
+                        <div class="card-body text-center text-md-left">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h2 class="h1 mb-3">Representing a shelter?</h2>
+                                    <p class="lead mb-4">
+                                        Find out how our website can help you promote pets
+                                        awaiting their new forever family.
+                                    </p>
+                                    <a href="#" class="btn btn-primary">For Shelters</a>
+                                </div>
+                                <div class="col-12 col-md-6 mt-5 d-none d-md-block mt-md-0 text-md-center">
+                                    <img src="{% static 'fido/doghouse.svg' %}" alt="doghouse">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock content %}
