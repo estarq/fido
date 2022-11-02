@@ -18,3 +18,16 @@
 textarea {
     box-shadow: none !important;
 }
+
+.form-control:focus {
+    border-color: #e6e7e8 !important;
+}
+
+a,
+label,
+.form-control,
+.input-group,
+.input-group-text,
+[class*=shadow] {
+    transition: none !important;
+}

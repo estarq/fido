@@ -59,15 +59,19 @@
                                            required>
                                     <label class="form-check-label" for="{{ form.consent.id_for_label }}">
                                         I agree to the
-                                        <a href="{% url 'accounts:tos' %}" class="font-weight-bold">terms of service</a>
+                                        <a href="{% url 'accounts:tos' %}" target="_blank" class="font-weight-bold">
+                                            terms of service
+                                        </a>
                                         and the
-                                        <a href="{% url 'accounts:privacy' %}" class="font-weight-bold">privacy policy</a>.
+                                        <a href="{% url 'accounts:privacy' %}" target="_blank" class="font-weight-bold">
+                                            privacy policy
+                                        </a>
                                     </label>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-block btn-primary">Sign up</button>
                         </form>
-                        <div class="d-block d-sm-flex justify-content-center align-items-center mt-4">
+                        <div class="d-block text-center mt-4">
                             <span class="font-weight-normal">
                                 Already have an account?
                                 <a href="{% url 'accounts:login' %}" class="font-weight-bold">Log in here</a>
