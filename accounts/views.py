@@ -4,6 +4,10 @@ from django.shortcuts import redirect, render
 from .forms import ErrorAlerts, NewUserForm
 
 
+def privacy(request):
+    return render(request, 'accounts/privacy.html')
+
+
 def register(request):
     if request.method == 'POST':
         form = NewUserForm(request.POST, error_class=ErrorAlerts)
