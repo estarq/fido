@@ -15,3 +15,7 @@ def register(request):
 
     form = NewUserForm()
     return render(request, 'accounts/register.html', {'form': form})
+
+
+def tos(request):
+    return render(request, 'accounts/tos.html')
