@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.forms.utils import ErrorList
-from django.utils.safestring import mark_safe
 
+from common.forms.utils import ErrorAlerts
 from .models import User
 
 
@@ -28,15 +27,3 @@ class LoginForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
-
-
-class ErrorAlerts(ErrorList):
-    def __str__(self):
-        return '' if not self else mark_safe(
-            ''.join(
-                '<div class="alert alert-danger mt-n2" role="alert">'
-                f'<div class="alert-inner--text" style="margin-left: -0.75rem !important">{err}</div>'
-                '</div>'
-                for err in self
-            )
-        )

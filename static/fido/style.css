@@ -14,3 +14,7 @@
 #signature {
     width: 150px;
 }
+
+textarea {
+    box-shadow: none !important;
+}

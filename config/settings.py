@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'fido.apps.FidoConfig',
     'accounts.apps.AccountsConfig',
+    'common.apps.CommonConfig',
 ]
 
 MIDDLEWARE = [
