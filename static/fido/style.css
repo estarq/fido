@@ -11,8 +11,16 @@
     filter: invert(1);
 }
 
+#logo-footer {
+    height: 25px;
+}
+
 #signature {
     width: 150px;
+}
+
+.alert-text-ml-n {
+    margin-left: -0.75rem;
 }
 
 textarea {

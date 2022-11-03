@@ -1,7 +1,12 @@
 from django.db import models
 
 
-# Create your models here.
+class Contact(models.Model):
+    name = models.CharField(max_length=15)
+    email = models.EmailField('email')
+    message = models.TextField()
+
+
 class Dog(models.Model):
     SEX = (
         ('M', 'Male'),
@@ -12,9 +17,3 @@ class Dog(models.Model):
     short_desc = models.CharField(max_length=100)
     desc = models.TextField()
     img = models.ImageField()
-
-
-class Contact(models.Model):
-    name = models.CharField(max_length=15)
-    email = models.EmailField('email')
-    message = models.TextField()

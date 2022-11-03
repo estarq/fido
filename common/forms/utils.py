@@ -7,7 +7,7 @@ class ErrorAlerts(ErrorList):
         return '' if not self else mark_safe(
             ''.join(
                 '<div class="alert alert-danger mt-n2" role="alert">'
-                f'<div class="alert-inner--text" style="margin-left: -0.75rem !important">{err}</div>'
+                f'<div class="alert-inner--text alert-text-ml-n">{err}</div>'
                 '</div>'
                 for err in self
             )

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}Fido{% endblock title %}</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'fido/logo.svg' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'fido/images/logo.svg' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css"
           integrity="sha512-rt/SrQ4UNIaGfDyEXZtNcyWvQeOq0QLygHluFQcSjaGB04IxWhal71tKuzP6K8eYXYB6vJV4pHkXcmFGGQ1/0w=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -19,15 +19,15 @@
 {% block navbar %}
     <nav class="navbar sticky-top navbar-expand-lg navbar-transparent navbar-dark navbar-theme-primary">
         <div class="container position-relative">
-            <a class="navbar-brand mr-lg-3" href="/">
-                <img class="navbar-brand-dark filter-invert" src="{% static 'fido/logo.svg' %}" alt="logo">
+            <a class="navbar-brand mr-lg-3" href="{% url 'fido:homepage' %}">
+                <img class="navbar-brand-dark filter-invert" src="{% static 'fido/images/logo.svg' %}" alt="logo">
             </a>
             <div class="navbar-collapse collapse" id="navbar-default-primary">
                 <div class="navbar-collapse-header">
                     <div class="row">
                         <div class="col-6 collapse-brand">
-                            <a href="#">
-                                <img src="{% static 'fido/logo.svg' %}" alt="logo">
+                            <a href="{% url 'fido:homepage' %}">
+                                <img src="{% static 'fido/images/logo.svg' %}" alt="logo">
                             </a>
                         </div>
                         <div class="col-6 collapse-close">
@@ -39,13 +39,12 @@
                 </div>
                 <ul class="navbar-nav navbar-nav-hover align-items-lg-center ml-4">
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link" data-toggle="dropdown"
-                           aria-controls="support_submenu" aria-expanded="false"
-                           aria-label="Toggle support menu item">
-                            <span class="nav-link-inner-text">Adopt</span>
+                        <a class="nav-link" data-toggle="dropdown" aria-controls="adopt_submenu" aria-expanded="false"
+                           aria-label="Toggle adopt submenu">
+                            <span class="nav-link-inner-text ml-0">Adopt</span>
                             <span class="fas fa-angle-down nav-link-arrow ml-2"></span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg" id="support_submenu">
+                        <div class="dropdown-menu dropdown-menu-lg" id="adopt_submenu">
                             <div class="col-auto px-0" data-dropdown-content="">
                                 <div class="list-group list-group-flush">
                                     <a href="#"
@@ -175,8 +174,8 @@
             <div class="row mt-2 mt-lg-6">
                 <div class="col mb-md-0">
                     <a href="{% url 'fido:homepage' %}" class="d-flex justify-content-center">
-                        <img src="{% static 'fido/logo.svg' %}" class="mb-3 filter-invert" alt="logo"
-                             style="height: 25px">
+                        <img src="{% static 'fido/images/logo.svg' %}" id="logo-footer" class="mb-3 filter-invert"
+                             alt="logo">
                     </a>
                     <div class="d-flex text-center justify-content-center align-items-center" role="contentinfo">
                         <p class="font-weight-normal font-small mb-0">

@@ -1,17 +1,6 @@
 from django.shortcuts import render
 
-from fido.models import Dog
 from .forms import ContactForm
-
-
-# Create your views here.
-def index(request):
-    dogs = Dog.objects.all()
-    return render(request, 'fido/index.html', {'dogs': dogs})
-
-
-def for_shelters(request):
-    return render(request, 'fido/for-shelters.html')
 
 
 def contact(request):

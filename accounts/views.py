@@ -1,16 +1,12 @@
 from django.contrib.auth import login
 from django.shortcuts import redirect, render
 
-from .forms import ErrorAlerts, NewUserForm
-
-
-def privacy(request):
-    return render(request, 'accounts/privacy.html')
+from .forms import NewUserForm
 
 
 def register(request):
     if request.method == 'POST':
-        form = NewUserForm(request.POST, error_class=ErrorAlerts)
+        form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -19,7 +15,3 @@ def register(request):
 
     form = NewUserForm()
     return render(request, 'accounts/register.html', {'form': form})
-
-
-def tos(request):
-    return render(request, 'accounts/tos.html')
