@@ -23,7 +23,7 @@
     margin-left: -0.75rem;
 }
 
-textarea {
+textarea, input, select {
     box-shadow: none !important;
 }
 

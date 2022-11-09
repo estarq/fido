@@ -10,7 +10,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('fido:homepage')
+            return redirect('fido:new-shelter')
         return render(request, 'accounts/register.html', {'form': form})
 
     form = NewUserForm()

@@ -13,7 +13,7 @@ urlpatterns = [
             template_name='accounts/login.html',
             authentication_form=forms.LoginForm,
             redirect_authenticated_user=True,
-            next_page='fido:homepage',
+            next_page='fido:new-shelter',
         ),
         name='login',
     ),
