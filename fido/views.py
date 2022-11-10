@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
-from .forms import ContactForm, NewShelterAddressForm, NewShelterForm
+from .forms import ContactForm, ShelterAddressForm, ShelterForm
 from .models import Shelter, ShelterAddress
 
 
@@ -10,12 +10,10 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
-            form = ContactForm()
-            return render(request, 'fido/contact.html', {'form': form, 'sent': True})
+            return render(request, 'fido/contact.html', {'form': ContactForm(), 'sent': True})
         return render(request, 'fido/contact.html', {'form': form, 'sent': False})
 
-    form = ContactForm()
-    return render(request, 'fido/contact.html', {'form': form})
+    return render(request, 'fido/contact.html', {'form': ContactForm()})
 
 
 @login_required
@@ -28,8 +26,8 @@ def new_shelter(request):
         return redirect('fido:shelter', pk=shelter.pk)
 
     if request.method == 'POST':
-        shelter_form = NewShelterForm(request.POST)
-        address_form = NewShelterAddressForm(request.POST)
+        shelter_form = ShelterForm(request.POST)
+        address_form = ShelterAddressForm(request.POST)
         if shelter_form.is_valid() and address_form.is_valid():
             shelter = shelter_form.save(commit=False)
             shelter.owner = request.user
@@ -41,9 +39,7 @@ def new_shelter(request):
         context = {'forms': [shelter_form, address_form]}
         return render(request, 'fido/new-shelter.html', context)
 
-    shelter_form = NewShelterForm()
-    address_form = NewShelterAddressForm()
-    context = {'forms': [shelter_form, address_form]}
+    context = {'forms': [ShelterForm(), ShelterAddressForm()]}
     return render(request, 'fido/new-shelter.html', context)
 
 

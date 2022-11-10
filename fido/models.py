@@ -5,7 +5,7 @@ from accounts.models import User
 
 class Contact(models.Model):
     name = models.CharField(max_length=15)
-    email = models.EmailField('email')
+    email = models.EmailField()
     message = models.TextField()
 
 
