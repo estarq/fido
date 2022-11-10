@@ -77,11 +77,7 @@
                     <li class="nav-item">
                         <a href="{% url 'fido:contact' %}" class="nav-link">Contact</a>
                     </li>
-                    {% if request.user.is_authenticated %}
-                        <li class="nav-item d-lg-none">
-                            <a href="{% url 'accounts:logout' %}" class="nav-link">Log out</a>
-                        </li>
-                    {% else %}
+                    {% if not request.user.is_authenticated %}
                         <li class="nav-item d-lg-none">
                             <a href="{% url 'accounts:register' %}" class="nav-link">Sign up</a>
                         </li>
@@ -91,18 +87,18 @@
                     {% endif %}
                 </ul>
             </div>
-            <div class="d-none d-sm-none d-md-none d-lg-block">
-                {% if request.user.is_authenticated %}
-                    <div id="account-menu-container" class="dropdown">
-                        <button class="btn dropdown-toggle" type="button" id="account-menu"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-2x fa-inverse fa-user-circle"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="account-menu">
-                            <a class="dropdown-item" href="{% url 'accounts:logout' %}">Log out</a>
-                        </div>
+            {% if request.user.is_authenticated %}
+                <div id="account-menu-container" class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="account-menu"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-2x fa-inverse fa-user-circle"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="account-menu">
+                        <a class="dropdown-item" href="{% url 'accounts:logout' %}">Log out</a>
                     </div>
-                {% else %}
+                </div>
+            {% else %}
+                <div class="d-none d-lg-block">
                     <div class="d-flex align-items-center">
                         <a href="{% url 'accounts:register' %}" class="btn btn-outline-white ml-md-3">Sign up</a>
                         <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-white ml-md-3">
@@ -110,8 +106,8 @@
                             Log in
                         </a>
                     </div>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
             <div class="d-flex align-items-center">
                 <button class="navbar-toggler ml-2" type="button" data-toggle="collapse"
                         data-target="#navbar-default-primary" aria-controls="navbar-default-primary"

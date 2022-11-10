@@ -1,3 +1,10 @@
+@media (max-width: 992px) {
+    #account-menu-container {
+        position: absolute;
+        right: 70px;
+    }
+}
+
 #account-menu-container .dropdown-item {
     color: #1c2540;
     font-weight: 400;
