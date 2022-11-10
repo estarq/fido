@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ shelter.name }} | {{ block.super }}
+{% endblock title %}
+{% block content %}
+    <section class="section section-header pb-5 bg-primary text-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-xl-8 text-center">
+                    <h1 class="display-2">{{ shelter.name }}</h1>
+                    <p class="my-5">{{ shelter.description }}</p>
+                </div>
+            </div>
+            <div class="row my-5">
+                <div class="col-12 col-sm-4 col-md-4 text-center">
+                    <div class="icon-box mb-4">
+                        <div class="icon icon-dark mb-4">
+                            <span class="fas fa-map-marker-alt text-white"></span>
+                        </div>
+                        <h2 class="h5 icon-box-title mb-3">Visit</h2>
+                        <span>{{ address }}</span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4 col-md-4 text-center my-4 my-sm-0">
+                    <div class="icon-box mb-4">
+                        <div class="icon icon-dark mb-4">
+                            <span class="fas fa-phone text-white"></span>
+                        </div>
+                        <h2 class="h5 icon-box-title mb-3">Call</h2>
+                        <a href="tel:{{ shelter.phone }}">{{ shelter.phone }}</a>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4 col-md-4 text-center">
+                    <div class="icon-box mb-4">
+                        <div class="icon icon-dark mb-4">
+                            <span class="far fa-envelope text-white"></span>
+                        </div>
+                        <h2 class="h5 icon-box-title mb-3">Email</h2>
+                        <a href="mailto:{{ shelter.email }}">{{ shelter.email }}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-xl-8 text-center">
+                    <p>
+                        For more details, visit
+                        <a target="_blank" rel="ugc" href="{{ shelter.website }}"> the shelter's website</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 
 from .forms import ContactForm, NewShelterAddressForm, NewShelterForm
-from .models import Shelter
+from .models import Shelter, ShelterAddress
 
 
 def contact(request):
@@ -20,8 +20,12 @@ def contact(request):
 
 @login_required
 def new_shelter(request):
-    if Shelter.objects.filter(owner=request.user).exists():
-        return redirect('fido:homepage')
+    try:
+        shelter = Shelter.objects.get(owner=request.user)
+    except Shelter.DoesNotExist:
+        pass
+    else:
+        return redirect('fido:shelter', pk=shelter.pk)
 
     if request.method == 'POST':
         shelter_form = NewShelterForm(request.POST)
@@ -33,7 +37,7 @@ def new_shelter(request):
             address = address_form.save(commit=False)
             address.shelter = shelter
             address.save()
-            return redirect('fido:homepage')
+            return redirect('fido:shelter', pk=shelter.pk)
         context = {'forms': [shelter_form, address_form]}
         return render(request, 'fido/new-shelter.html', context)
 
@@ -41,3 +45,11 @@ def new_shelter(request):
     address_form = NewShelterAddressForm()
     context = {'forms': [shelter_form, address_form]}
     return render(request, 'fido/new-shelter.html', context)
+
+
+def shelter_page(request, pk):
+    context = {
+        'shelter': get_object_or_404(Shelter, pk=pk),
+        'address': ShelterAddress.objects.get(shelter=pk),
+    }
+    return render(request, 'fido/shelter.html', context)
