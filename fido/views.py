@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
+from common.decorators import shelter_required
 from .forms import ContactForm, ShelterAddressForm, ShelterForm
 from .models import Shelter, ShelterAddress
 
@@ -49,3 +50,25 @@ def shelter_page(request, pk):
         'address': ShelterAddress.objects.get(shelter=pk),
     }
     return render(request, 'fido/shelter.html', context)
+
+
+@login_required
+@shelter_required
+def edit_shelter(request):
+    if request.method == 'POST':
+        shelter_form = ShelterForm(request.POST)
+        address_form = ShelterAddressForm(request.POST)
+        if shelter_form.is_valid() and address_form.is_valid():
+            shelter = Shelter.objects.filter(owner=request.user)
+            address = ShelterAddress.objects.filter(shelter=shelter.first())
+            shelter.update(**shelter_form.cleaned_data)
+            address.update(**address_form.cleaned_data)
+            return redirect('fido:shelter', pk=shelter.first().pk)
+        context = {'forms': [shelter_form, address_form]}
+        return render(request, 'fido/edit-shelter.html', context)
+
+    shelter = Shelter.objects.get(owner=request.user)
+    shelter_form = ShelterForm(instance=shelter)
+    address_form = ShelterAddressForm(instance=shelter.shelteraddress)
+    context = {'forms': [shelter_form, address_form]}
+    return render(request, 'fido/edit-shelter.html', context)

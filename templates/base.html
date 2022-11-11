@@ -97,6 +97,7 @@
                         {% with shelter_pk=request.user.shelter.pk %}
                             {% if shelter_pk %}
                                 <a class="dropdown-item" href="{% url 'fido:shelter' shelter_pk %}">My shelter</a>
+                                <a class="dropdown-item" href="{% url 'fido:edit-shelter' %}">Edit shelter</a>
                             {% else %}
                                 <a class="dropdown-item" href="{% url 'fido:new-shelter' %}">New shelter</a>
                             {% endif %}
