@@ -1,21 +1,20 @@
 from django.contrib import admin
+from django.db.models.fields.reverse_related import ManyToOneRel
 
-from .models import Dog, Contact, Shelter, ShelterAddress
-
-
-class ContactAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in Contact._meta.get_fields()]
+from .models import Cat, Contact, Dog, Shelter, ShelterAddress
 
 
-class ShelterAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in Shelter._meta.get_fields()]
+class DynamicModelAdmin(admin.ModelAdmin):
+    def __init__(self, model, *args, **kwargs):
+        super().__init__(model, *args, **kwargs)
+        self.list_display = [
+            field.name for field in model._meta.get_fields()
+            if not isinstance(field, ManyToOneRel)
+        ]
 
 
-class ShelterAddressAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in ShelterAddress._meta.get_fields()]
-
-
-admin.site.register(Contact, ContactAdmin)
-admin.site.register(Dog)
-admin.site.register(Shelter, ShelterAdmin)
-admin.site.register(ShelterAddress, ShelterAddressAdmin)
+admin.site.register(Cat, DynamicModelAdmin)
+admin.site.register(Contact, DynamicModelAdmin)
+admin.site.register(Dog, DynamicModelAdmin)
+admin.site.register(Shelter, DynamicModelAdmin)
+admin.site.register(ShelterAddress, DynamicModelAdmin)

@@ -9,18 +9,6 @@ class Contact(models.Model):
     message = models.TextField()
 
 
-class Dog(models.Model):
-    SEX = (
-        ('M', 'Male'),
-        ('F', 'Female'),
-    )
-    name = models.CharField(max_length=15)
-    sex = models.CharField(max_length=1, choices=SEX)
-    short_desc = models.CharField(max_length=100)
-    desc = models.TextField()
-    img = models.ImageField()
-
-
 class Shelter(models.Model):
     def __str__(self):
         return self.name
@@ -62,3 +50,75 @@ class ShelterAddress(models.Model):
     street = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
     shelter = models.OneToOneField(Shelter, on_delete=models.CASCADE)
+
+
+class Pet(models.Model):
+    SEXES = (
+        ('Male', 'Male'),
+        ('Female', 'Female')
+    )
+    name = models.CharField(max_length=15)
+    sex = models.CharField(max_length=6, choices=SEXES, default=SEXES[0][0])
+    description = models.TextField()
+    photo = models.ImageField()
+    shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.name
+
+
+class Cat(Pet):
+    AGE_RANGES = (
+        ('Kitten', 'Kitten'),
+        ('Young', 'Young'),
+        ('Adult', 'Adult'),
+        ('Senior', 'Senior')
+    )
+    BREEDS = (
+        ('Abyssinian', 'Abyssinian'),
+        ('Bengal', 'Bengal'),
+        ('Birman', 'Birman'),
+        ('Devon Rex', 'Devon Rex'),
+        ('Egyptian Mau', 'Egyptian Mau'),
+        ('Foldex', 'Foldex'),
+        ('Himalayan', 'Himalayan'),
+        ('Maine Coon', 'Maine Coon'),
+        ('Persian', 'Persian'),
+        ('Ragdoll', 'Ragdoll'),
+        ('Scottish Fold', 'Scottish Fold'),
+        ('Siamese', 'Siamese'),
+        ('Sphynx', 'Sphynx'),
+    )
+
+    age = models.CharField(max_length=6, choices=AGE_RANGES, default=AGE_RANGES[0][0])
+    breed = models.CharField(max_length=13, choices=BREEDS, default=BREEDS[0][0])
+
+
+class Dog(Pet):
+    AGE_RANGES = (
+        ('Puppy', 'Puppy'),
+        ('Young', 'Young'),
+        ('Adult', 'Adult'),
+        ('Senior', 'Senior')
+    )
+    BREEDS = (
+        ('Basset Hound', 'Basset Hound'),
+        ('Beagle', 'Beagle'),
+        ('Border Collie', 'Border Collie'),
+        ('Boston Terrier', 'Boston Terrier'),
+        ('Boxer', 'Boxer'),
+        ('Cockapoo', 'Cockapoo'),
+        ('Cocker Spaniel', 'Cocker Spaniel'),
+        ('French Bulldog', 'French Bulldog'),
+        ('Golden Retriever', 'Golden Retriever'),
+        ('Greyhound', 'Greyhound'),
+        ('Irish Setter', 'Irish Setter'),
+        ('Labrador Retriever', 'Labrador Retriever'),
+        ('Poodle', 'Poodle'),
+    )
+
+    age = models.CharField(max_length=6, choices=AGE_RANGES, default=AGE_RANGES[0][0])
+    breed = models.CharField(max_length=18, choices=BREEDS, default=BREEDS[0][0])
