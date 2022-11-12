@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load custom_tags_filters %}
+{% block title %}
+    {{ pet.name }} | {{ block.super }}
+{% endblock title %}
+{% block content %}
+    <section class="container my-6">
+        <div id="pet-flex-container" class="row justify-content-between align-items-center">
+            <div class="col-12 col-md-7 col-lg-6 text-center text-md-left">
+                <h1 class="display-3 mb-4">
+                    {{ pet.name }}
+                    <i class="fas {% if pet.sex == 'Male' %}fa-mars{% else %}fa-venus{% endif %} ml-2"></i>
+                </h1>
+                <p class="lead mb-4">
+                    <span class="font-weight-normal">Breed:</span>
+                    <span class="text-muted">{{ pet.breed }}</span>
+                </p>
+                <p class="lead mb-4">
+                    <span class="font-weight-normal">Age:</span>
+                    <span class="text-muted">{{ pet.age }}</span>
+                </p>
+                <p class="lead mb-4 text-muted">{{ pet.description }}</p>
+                {% with shelter=pet.shelter %}
+                    <a href="{% url 'fido:shelter' shelter.pk %}" class="btn btn-outline-gray mr-2">
+                        <i class="fas fa-home mr-2"></i>
+                        Shelter page
+                    </a>
+                    <a href="tel:{{ shelter.phone|phone2numeric }}" class="btn btn-outline-gray">
+                        <i class="fas fa-phone mr-2 horizontal-flip"></i>
+                        {{ shelter.phone|phone2numeric|format_phone_number }}
+                    </a>
+                {% endwith %}
+            </div>
+            <div class="col-12 col-md-5 text-center mb-5 mb-md-0">
+                <img class="img-shadow border-radius-10" src="{{ pet.photo.url }}" alt="{{ pet.name }}">
+            </div>
+        </div>
+    </section>
+{% endblock content %}

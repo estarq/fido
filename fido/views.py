@@ -44,6 +44,11 @@ def new_shelter(request):
     return render(request, 'fido/new-shelter.html', context)
 
 
+def pet(request, pk, model):
+    context = {'pet': get_object_or_404(model, pk=pk)}
+    return render(request, 'fido/pet.html', context)
+
+
 def shelter_page(request, pk):
     context = {
         'shelter': get_object_or_404(Shelter, pk=pk),
