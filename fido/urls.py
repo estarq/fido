@@ -13,6 +13,8 @@ urlpatterns = [
     path('dog/<int:pk>/', views.pet, name='dog', kwargs={'model': Dog}),
     path('for-shelters/', TemplateView.as_view(template_name='fido/for-shelters.html'), name='for-shelters'),
     path('shelter/<int:pk>/', views.shelter_page, name='shelter'),
+    path('shelter/cat/new/', views.new_cat, name='new-cat'),
+    path('shelter/dog/new/', views.new_dog, name='new-dog'),
     path('shelter/edit/', views.edit_shelter, name='edit-shelter'),
     path('shelter/new/', views.new_shelter, name='new-shelter'),
 ]

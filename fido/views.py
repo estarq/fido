@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
 from common.decorators import shelter_required
-from .forms import ContactForm, ShelterAddressForm, ShelterForm
+from .forms import ContactForm, CatForm, DogForm, ShelterAddressForm, ShelterForm
 from .models import Shelter, ShelterAddress
 
 
@@ -77,3 +77,47 @@ def edit_shelter(request):
     address_form = ShelterAddressForm(instance=shelter.shelteraddress)
     context = {'forms': [shelter_form, address_form]}
     return render(request, 'fido/edit-shelter.html', context)
+
+
+@login_required
+@shelter_required
+def new_cat(request):
+    context = {
+        'title': 'New Cat',
+        'headline': 'New Cat',
+    }
+
+    if request.method == 'POST':
+        form = CatForm(request.POST, request.FILES)
+        if form.is_valid():
+            cat = form.save(commit=False)
+            cat.shelter = request.user.shelter
+            cat.save()
+            return redirect('fido:cat', pk=cat.pk)
+        context.update(form=form)
+        return render(request, 'fido/form.html', context)
+
+    context.update(form=CatForm())
+    return render(request, 'fido/form.html', context)
+
+
+@login_required
+@shelter_required
+def new_dog(request):
+    context = {
+        'title': 'New Dog',
+        'headline': 'New Dog',
+    }
+
+    if request.method == 'POST':
+        form = DogForm(request.POST, request.FILES)
+        if form.is_valid():
+            dog = form.save(commit=False)
+            dog.shelter = request.user.shelter
+            dog.save()
+            return redirect('fido:dog', pk=dog.pk)
+        context.update(form=form)
+        return render(request, 'fido/form.html', context)
+
+    context.update(form=DogForm())
+    return render(request, 'fido/form.html', context)
