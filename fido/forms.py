@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import FileInput, ImageField, ModelForm
 
 from common.forms.models import StyledForm
 from .models import Contact, Cat, Dog, Shelter, ShelterAddress
@@ -32,3 +32,20 @@ class DogForm(StyledForm, ModelForm):
     class Meta:
         model = Dog
         exclude = ['shelter']
+
+
+class EditPetForm(ModelForm):
+    photo = ImageField(required=False, widget=FileInput)
+
+    def clean(self):
+        if not self.cleaned_data['photo']:
+            self.cleaned_data.pop('photo')
+        super().clean()
+
+
+class EditCatForm(EditPetForm, CatForm):
+    pass
+
+
+class EditDogForm(EditPetForm, DogForm):
+    pass

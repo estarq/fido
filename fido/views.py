@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render, get_object_or_404
 
 from common.decorators import shelter_required
-from .forms import ContactForm, CatForm, DogForm, ShelterAddressForm, ShelterForm
-from .models import Shelter, ShelterAddress
+from .forms import ContactForm, CatForm, DogForm, EditCatForm, EditDogForm, ShelterAddressForm, ShelterForm
+from .models import Cat, Dog, Shelter, ShelterAddress
 
 
 def contact(request):
@@ -120,4 +121,54 @@ def new_dog(request):
         return render(request, 'fido/form.html', context)
 
     context.update(form=DogForm())
+    return render(request, 'fido/form.html', context)
+
+
+@login_required
+@shelter_required
+def edit_cat(request, pk):
+    cat = get_object_or_404(Cat, pk=pk)
+    if cat.shelter != request.user.shelter:
+        raise PermissionDenied
+
+    context = {
+        'title': 'Edit Cat',
+        'headline': 'Cat Details',
+    }
+
+    if request.method == 'POST':
+        form = EditCatForm(request.POST, request.FILES)
+        if form.is_valid():
+            cat = Cat.objects.filter(pk=pk)
+            cat.update(**form.cleaned_data)
+            return redirect('fido:cat', pk=pk)
+        context.update(form=form)
+        return render(request, 'fido/form.html', context)
+
+    context.update(form=EditCatForm(instance=cat))
+    return render(request, 'fido/form.html', context)
+
+
+@login_required
+@shelter_required
+def edit_dog(request, pk):
+    dog = get_object_or_404(Dog, pk=pk)
+    if dog.shelter != request.user.shelter:
+        raise PermissionDenied
+
+    context = {
+        'title': 'Edit Dog',
+        'headline': 'Dog Details',
+    }
+
+    if request.method == 'POST':
+        form = EditDogForm(request.POST, request.FILES)
+        if form.is_valid():
+            dog = Dog.objects.filter(pk=pk)
+            dog.update(**form.cleaned_data)
+            return redirect('fido:dog', pk=pk)
+        context.update(form=form)
+        return render(request, 'fido/form.html', context)
+
+    context.update(form=EditDogForm(instance=dog))
     return render(request, 'fido/form.html', context)
