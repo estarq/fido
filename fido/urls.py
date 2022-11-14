@@ -19,4 +19,5 @@ urlpatterns = [
     path('shelter/dog/<int:pk>/edit/', views.edit_dog, name='edit-dog'),
     path('shelter/edit/', views.edit_shelter, name='edit-shelter'),
     path('shelter/new/', views.new_shelter, name='new-shelter'),
+    path('shelter/remove/', views.remove_shelter, name='remove-shelter'),
 ]

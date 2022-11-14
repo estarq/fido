@@ -82,6 +82,23 @@ def edit_shelter(request):
 
 @login_required
 @shelter_required
+def remove_shelter(request):
+    shelter = Shelter.objects.get(owner=request.user)
+    if request.method == 'POST':
+        shelter.delete()
+        return redirect('fido:homepage')
+
+    cat_count = Cat.objects.filter(shelter=shelter).count()
+    dog_count = Dog.objects.filter(shelter=shelter).count()
+    context = {
+        'shelter': shelter,
+        'count': cat_count + dog_count,
+    }
+    return render(request, 'fido/remove-shelter.html', context)
+
+
+@login_required
+@shelter_required
 def new_cat(request):
     context = {
         'title': 'New Cat',
