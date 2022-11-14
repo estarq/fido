@@ -45,7 +45,7 @@ def new_shelter(request):
     return render(request, 'fido/new-shelter.html', context)
 
 
-def pet(request, pk, model):
+def pet_page(request, pk, model):
     context = {'pet': get_object_or_404(model, pk=pk)}
     return render(request, 'fido/pet.html', context)
 
@@ -189,3 +189,17 @@ def edit_dog(request, pk):
 
     context.update(form=EditDogForm(instance=dog))
     return render(request, 'fido/form.html', context)
+
+
+@login_required
+@shelter_required
+def remove_pet(request, pk, model):
+    pet = get_object_or_404(model, pk=pk)
+    if pet.shelter != request.user.shelter:
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        pet.delete()
+        return redirect('fido:homepage')
+
+    return render(request, 'fido/remove-pet.html', {'pet': pet})
