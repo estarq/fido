@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, SuspiciousOperation
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, render, get_object_or_404
 
 from common.decorators import shelter_required
-from .forms import ContactForm, CatForm, DogForm, EditCatForm, EditDogForm, ShelterAddressForm, ShelterForm
+from .forms import (ContactForm, CatForm, DogForm, EditCatForm, EditDogForm, SearchCatsForm,
+                    SearchDogsForm, ShelterAddressForm, ShelterForm)
 from .models import Cat, Dog, Shelter, ShelterAddress
 
 
@@ -56,6 +58,72 @@ def shelter_page(request, pk):
         'address': ShelterAddress.objects.get(shelter=pk),
     }
     return render(request, 'fido/shelter.html', context)
+
+
+def search_cats(request):
+    model = Cat
+    context = {
+        'form': SearchCatsForm(),
+        'pet_url': 'fido:cat',
+        'name_plural': 'cats',
+        'approx_pet_count': 37500,
+    }
+    return search_pets(request, model, context)
+
+
+def search_dogs(request):
+    model = Dog
+    context = {
+        'form': SearchDogsForm(),
+        'pet_url': 'fido:dog',
+        'name_plural': 'dogs',
+        'approx_pet_count': 21700,
+    }
+    return search_pets(request, model, context)
+
+
+def search_pets(request, model, context):
+    pets = model.objects.all()
+    paginator = Paginator(pets, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context.update(page_obj=page_obj)
+    return render(request, 'fido/search-pets.html', context)
+
+
+def search_cats_params(request, **kwargs):
+    model = Cat
+    form_class = SearchCatsForm
+    context = {
+        'pet_url': 'fido:cat',
+        'name_plural': 'cats',
+        'approx_pet_count': 37500,
+    }
+    return search_pets_params(request, model, form_class, context, **kwargs)
+
+
+def search_dogs_params(request, **kwargs):
+    model = Dog
+    form_class = SearchDogsForm
+    context = {
+        'pet_url': 'fido:dog',
+        'name_plural': 'dogs',
+        'approx_pet_count': 21700,
+    }
+    return search_pets_params(request, model, form_class, context, **kwargs)
+
+
+def search_pets_params(request, model, form_class, context, **kwargs):
+    kwargs = {k: v.replace('-', ' ') for k, v in kwargs.items()}
+    form = form_class(data=kwargs)
+    if not form.is_valid():
+        raise SuspiciousOperation
+    pets = model.objects.filter(**kwargs).select_related('shelter__shelteraddress')
+    paginator = Paginator(pets, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context.update(form=form, page_obj=page_obj)
+    return render(request, 'fido/search-pets.html', context)
 
 
 @login_required

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}
+    Search for adoptable {{ name_plural }} | {{ block.super }}
+{% endblock title %}
+{% block content %}
+    <section class="section pb-7 bg-primary text-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-xl-8 text-center">
+                    <h1 class="display-2 mb-4">Search for adoptable {{ name_plural }}</h1>
+                    <p>Search among more than {{ approx_pet_count }} {{ name_plural }} in our database</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="pet-search-section" class="section mt-n9">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card border-light">
+                        <form method="POST" id="search-form">
+                            <div class="card-body p-3 pt-4 pt-md-3 p-md-5 d-flex flex-wrap">
+                                {% csrf_token %}
+                                {% for field in form %}
+                                    <div class="col-6 col-md-3 pb-3 pb-md-0">
+                                        {{ field.label }}
+                                        {{ field }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="mt-n5 mt-sm-n6 mt-md-n5 mb-6">
+        <div class="container">
+            <div class="row align-items-center">
+                {% for pet in page_obj %}
+                    <div class="col-6 col-md-4 col-lg-3 pt-4">
+                        <div class="card">
+                            <img src="{{ pet.photo.url }}" class="card-img-top rounded-top" alt="{{ pet }}">
+                            <div class="card-body border border-light rounded-bottom border-top-0">
+                                <span class="h6 icon-tertiary small">{{ pet.breed }}</span>
+                                <h5 class="card-title mt-3">
+                                    {{ pet }}
+                                    <i class="fas {% if pet.sex == 'Male' %}fa-mars{% else %}fa-venus{% endif %} ml-2"></i>
+                                </h5>
+                                <p class="card-text">{{ pet.description|truncatechars:100 }}</p>
+                                <a href="{% url pet_url pet.pk %}" target="_blank" class="btn btn-primary btn-sm">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center mt-5">
+                        <p>No results.</p>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if page_obj.paginator.count %}
+                <div class="row justify-content-center mt-5">
+                    <nav aria-label="search results pagination">
+                        <ul class="pagination">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+                            {% if page_obj.number != 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        {{ page_obj.previous_page_number }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li class="page-item active">
+                                <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+                            </li>
+                            {% for number in '123'|make_list %}
+                                {% if page_obj.number|add:number <= page_obj.paginator.num_pages %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.number|add:number }}">
+                                            {{ page_obj.number|add:number }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    <script>
+        let selects = document.getElementsByTagName('select');
+        for (let select of selects) {
+            select.addEventListener('change', () => {
+                let url = window.location.origin + '/search/{{ name_plural }}/'
+                for (let field of selects) {
+                    url += field.value.replace(' ', '-') + '/'
+                }
+                document.getElementById('search-form').action = url;
+                document.getElementById('search-form').submit();
+            });
+        }
+    </script>
+{% endblock content %}

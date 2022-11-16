@@ -1,5 +1,6 @@
-from django.forms import FileInput, ImageField, ModelForm
+from django.forms import ChoiceField, FileInput, ImageField, ModelForm
 
+from common.constants import US_STATES
 from common.forms.models import StyledForm
 from .models import Contact, Cat, Dog, Shelter, ShelterAddress
 
@@ -49,3 +50,20 @@ class EditCatForm(EditPetForm, CatForm):
 
 class EditDogForm(EditPetForm, DogForm):
     pass
+
+
+class SearchPetsForm(StyledForm):
+    shelter__shelteraddress__state = ChoiceField(choices=US_STATES, label='State')
+
+    class Meta:
+        fields = ['breed', 'age', 'sex', 'shelter__shelteraddress__state']
+
+
+class SearchCatsForm(SearchPetsForm, ModelForm):
+    class Meta(SearchPetsForm.Meta):
+        model = Cat
+
+
+class SearchDogsForm(SearchPetsForm, ModelForm):
+    class Meta(SearchPetsForm.Meta):
+        model = Dog
