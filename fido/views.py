@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.core.paginator import Paginator
@@ -53,9 +55,16 @@ def pet_page(request, pk, model):
 
 
 def shelter_page(request, pk):
+    shelter = get_object_or_404(Shelter.objects.select_related('shelteraddress'), pk=pk)
+    cats = Cat.objects.filter(shelter=shelter)
+    dogs = Dog.objects.filter(shelter=shelter)
+    # cats.union(dogs) makes Dogs appear to be Cats and breaks a custom filter
+    pets = sorted(chain(cats, dogs), key=lambda pet: -pet.pk)
+    page_obj = Paginator(pets, 12).get_page(request.GET.get('page'))
     context = {
-        'shelter': get_object_or_404(Shelter, pk=pk),
-        'address': ShelterAddress.objects.get(shelter=pk),
+        'shelter': shelter,
+        'address': shelter.shelteraddress,
+        'page_obj': page_obj,
     }
     return render(request, 'fido/shelter.html', context)
 
@@ -83,7 +92,7 @@ def search_dogs(request):
 
 
 def search_pets(request, model, context):
-    pets = model.objects.all()
+    pets = model.objects.all().order_by('-pk')
     paginator = Paginator(pets, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -118,7 +127,7 @@ def search_pets_params(request, model, form_class, context, **kwargs):
     form = form_class(data=kwargs)
     if not form.is_valid():
         raise SuspiciousOperation
-    pets = model.objects.filter(**kwargs).select_related('shelter__shelteraddress')
+    pets = model.objects.filter(**kwargs).select_related('shelter__shelteraddress').order_by('-pk')
     paginator = Paginator(pets, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

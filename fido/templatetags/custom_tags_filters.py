@@ -9,3 +9,8 @@ register = template.Library()
 def format_phone_number(number):
     digits = ''.join(filter(str.isdigit, number))
     return ' '.join(wrap(digits, 3))
+
+
+@register.filter
+def get_pet_page_url(pet):
+    return 'fido:cat' if pet.__class__.__name__ == 'Cat' else 'fido:dog'
