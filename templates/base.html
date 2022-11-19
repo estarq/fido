@@ -98,6 +98,7 @@
                             {% if shelter_pk %}
                                 <a class="dropdown-item" href="{% url 'fido:shelter' shelter_pk %}">My shelter</a>
                                 <a class="dropdown-item" href="{% url 'fido:edit-shelter' %}">Edit shelter</a>
+                                <a class="dropdown-item" href="{% url 'fido:manage-pets' %}">Manage pets</a>
                                 <a class="dropdown-item" href="{% url 'fido:remove-shelter' %}">Remove shelter</a>
                             {% else %}
                                 <a class="dropdown-item" href="{% url 'fido:new-shelter' %}">New shelter</a>

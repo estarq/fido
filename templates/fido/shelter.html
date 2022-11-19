@@ -68,7 +68,7 @@
                                     <i class="fas {% if pet.sex == 'Male' %}fa-mars{% else %}fa-venus{% endif %} ml-2"></i>
                                 </h5>
                                 <p class="card-text">{{ pet.description|truncatechars:100 }}</p>
-                                <a href="{% url pet|get_pet_page_url pet.pk %}" target="_blank"
+                                <a href="{% url pet|get_pet_url pet.pk %}" target="_blank"
                                    class="btn btn-primary btn-sm">
                                     Details
                                 </a>

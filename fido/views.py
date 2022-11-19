@@ -56,17 +56,27 @@ def pet_page(request, pk, model):
 
 def shelter_page(request, pk):
     shelter = get_object_or_404(Shelter.objects.select_related('shelteraddress'), pk=pk)
+    context = {
+        'shelter': shelter,
+        'address': shelter.shelteraddress,
+        'page_obj': page_obj_all_pets(request, shelter),
+    }
+    return render(request, 'fido/shelter.html', context)
+
+
+@login_required
+@shelter_required
+def manage_pets(request):
+    page_obj = page_obj_all_pets(request, request.user.shelter)
+    return render(request, 'fido/manage-pets.html', {'page_obj': page_obj})
+
+
+def page_obj_all_pets(request, shelter):
     cats = Cat.objects.filter(shelter=shelter)
     dogs = Dog.objects.filter(shelter=shelter)
     # cats.union(dogs) makes Dogs appear to be Cats and breaks a custom filter
     pets = sorted(chain(cats, dogs), key=lambda pet: -pet.pk)
-    page_obj = Paginator(pets, 12).get_page(request.GET.get('page'))
-    context = {
-        'shelter': shelter,
-        'address': shelter.shelteraddress,
-        'page_obj': page_obj,
-    }
-    return render(request, 'fido/shelter.html', context)
+    return Paginator(pets, 12).get_page(request.GET.get('page'))
 
 
 def search_cats(request):
@@ -277,6 +287,6 @@ def remove_pet(request, pk, model):
 
     if request.method == 'POST':
         pet.delete()
-        return redirect('fido:homepage')
+        return redirect('fido:manage-pets')
 
     return render(request, 'fido/remove-pet.html', {'pet': pet})

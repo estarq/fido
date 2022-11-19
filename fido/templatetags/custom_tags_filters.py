@@ -12,5 +12,6 @@ def format_phone_number(number):
 
 
 @register.filter
-def get_pet_page_url(pet):
-    return 'fido:cat' if pet.__class__.__name__ == 'Cat' else 'fido:dog'
+def get_pet_url(pet, action=''):
+    class_name = str.lower(pet.__class__.__name__)
+    return f'fido:{action}-{class_name}' if action else f'fido:{class_name}'

@@ -19,6 +19,7 @@ urlpatterns = [
     path('search/dogs/<slug:breed>/<slug:age>/<slug:sex>/<slug:shelter__shelteraddress__state>/',
          views.search_dogs_params),
     path('shelter/<int:pk>/', views.shelter_page, name='shelter'),
+    path('shelter/pets/', views.manage_pets, name='manage-pets'),
     path('shelter/cat/new/', views.new_cat, name='new-cat'),
     path('shelter/dog/new/', views.new_dog, name='new-dog'),
     path('shelter/cat/<int:pk>/edit/', views.edit_cat, name='edit-cat'),
