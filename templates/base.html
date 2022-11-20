@@ -97,7 +97,7 @@
                         {% with shelter_pk=request.user.shelter.pk %}
                             {% if shelter_pk %}
                                 <a class="dropdown-item" href="{% url 'fido:shelter' shelter_pk %}">My shelter</a>
-                                <a class="dropdown-item" href="{% url 'fido:edit-shelter' %}">Edit shelter</a>
+                                <a class="dropdown-item" href="{% url 'fido:edit-shelter' %}">Manage shelter</a>
                                 <a class="dropdown-item" href="{% url 'fido:manage-pets' %}">Manage pets</a>
                                 <a class="dropdown-item" href="{% url 'fido:remove-shelter' %}">Remove shelter</a>
                             {% else %}
@@ -140,22 +140,26 @@
                     </p>
                     <ul class="social-buttons mb-5 mb-lg-0">
                         <li>
-                            <a href="#" class="icon icon-xs icon-white" aria-label="twitter social link">
+                            <a href="https://twitter.com" target="_blank" rel="noreferrer nofollow"
+                               class="icon icon-xs icon-white" aria-label="twitter social link">
                                 <span class="fab fa-twitter"></span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="icon icon-xs icon-white" aria-label="facebook social link">
+                            <a href="https://facebook.com" target="_blank" rel="noreferrer nofollow"
+                               class="icon icon-xs icon-white" aria-label="facebook social link">
                                 <span class="fab fa-facebook"></span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="icon icon-xs icon-white" aria-label="instagram social link">
+                            <a href="https://instagram.com" target="_blank" rel="noreferrer nofollow"
+                               class="icon icon-xs icon-white" aria-label="instagram social link">
                                 <span class="fab fa-instagram"></span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="icon icon-xs icon-white" aria-label="youtube social link">
+                            <a href="https://youtube.com" target="_blank" rel="noreferrer nofollow"
+                               class="icon icon-xs icon-white" aria-label="youtube social link">
                                 <span class="fab fa-youtube"></span>
                             </a>
                         </li>

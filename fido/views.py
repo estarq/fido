@@ -31,6 +31,11 @@ def new_shelter(request):
     else:
         return redirect('fido:shelter', pk=shelter.pk)
 
+    context = {
+        'title': 'New shelter',
+        'headline': 'Shelter Details',
+    }
+
     if request.method == 'POST':
         shelter_form = ShelterForm(request.POST)
         address_form = ShelterAddressForm(request.POST)
@@ -42,11 +47,11 @@ def new_shelter(request):
             address.shelter = shelter
             address.save()
             return redirect('fido:shelter', pk=shelter.pk)
-        context = {'forms': [shelter_form, address_form]}
-        return render(request, 'fido/new-shelter.html', context)
+        context.update(forms=[shelter_form, address_form])
+        return render(request, 'fido/form.html', context)
 
-    context = {'forms': [ShelterForm(), ShelterAddressForm()]}
-    return render(request, 'fido/new-shelter.html', context)
+    context.update(forms=[ShelterForm(), ShelterAddressForm()])
+    return render(request, 'fido/form.html', context)
 
 
 def pet_page(request, pk, model):
@@ -148,6 +153,11 @@ def search_pets_params(request, model, form_class, context, **kwargs):
 @login_required
 @shelter_required
 def edit_shelter(request):
+    context = {
+        'title': 'Manage shelter',
+        'headline': 'Shelter Details',
+    }
+
     if request.method == 'POST':
         shelter_form = ShelterForm(request.POST)
         address_form = ShelterAddressForm(request.POST)
@@ -157,14 +167,14 @@ def edit_shelter(request):
             shelter.update(**shelter_form.cleaned_data)
             address.update(**address_form.cleaned_data)
             return redirect('fido:shelter', pk=shelter.first().pk)
-        context = {'forms': [shelter_form, address_form]}
-        return render(request, 'fido/edit-shelter.html', context)
+        context.update(forms=[shelter_form, address_form])
+        return render(request, 'fido/form.html', context)
 
     shelter = Shelter.objects.get(owner=request.user)
     shelter_form = ShelterForm(instance=shelter)
     address_form = ShelterAddressForm(instance=shelter.shelteraddress)
-    context = {'forms': [shelter_form, address_form]}
-    return render(request, 'fido/edit-shelter.html', context)
+    context.update(forms=[shelter_form, address_form])
+    return render(request, 'fido/form.html', context)
 
 
 @login_required
@@ -188,8 +198,8 @@ def remove_shelter(request):
 @shelter_required
 def new_cat(request):
     context = {
-        'title': 'New Cat',
-        'headline': 'New Cat',
+        'title': 'New cat',
+        'headline': 'Cat Details',
     }
 
     if request.method == 'POST':
@@ -199,10 +209,10 @@ def new_cat(request):
             cat.shelter = request.user.shelter
             cat.save()
             return redirect('fido:cat', pk=cat.pk)
-        context.update(form=form)
+        context.update(forms=[form])
         return render(request, 'fido/form.html', context)
 
-    context.update(form=CatForm())
+    context.update(forms=[CatForm()])
     return render(request, 'fido/form.html', context)
 
 
@@ -210,8 +220,8 @@ def new_cat(request):
 @shelter_required
 def new_dog(request):
     context = {
-        'title': 'New Dog',
-        'headline': 'New Dog',
+        'title': 'New dog',
+        'headline': 'Dog Details',
     }
 
     if request.method == 'POST':
@@ -221,10 +231,10 @@ def new_dog(request):
             dog.shelter = request.user.shelter
             dog.save()
             return redirect('fido:dog', pk=dog.pk)
-        context.update(form=form)
+        context.update(forms=[form])
         return render(request, 'fido/form.html', context)
 
-    context.update(form=DogForm())
+    context.update(forms=[DogForm()])
     return render(request, 'fido/form.html', context)
 
 
@@ -236,7 +246,7 @@ def edit_cat(request, pk):
         raise PermissionDenied
 
     context = {
-        'title': 'Edit Cat',
+        'title': 'Edit cat',
         'headline': 'Cat Details',
     }
 
@@ -246,10 +256,10 @@ def edit_cat(request, pk):
             cat = Cat.objects.filter(pk=pk)
             cat.update(**form.cleaned_data)
             return redirect('fido:cat', pk=pk)
-        context.update(form=form)
+        context.update(forms=[form])
         return render(request, 'fido/form.html', context)
 
-    context.update(form=EditCatForm(instance=cat))
+    context.update(forms=[EditCatForm(instance=cat)])
     return render(request, 'fido/form.html', context)
 
 
@@ -261,7 +271,7 @@ def edit_dog(request, pk):
         raise PermissionDenied
 
     context = {
-        'title': 'Edit Dog',
+        'title': 'Edit dog',
         'headline': 'Dog Details',
     }
 
@@ -271,10 +281,10 @@ def edit_dog(request, pk):
             dog = Dog.objects.filter(pk=pk)
             dog.update(**form.cleaned_data)
             return redirect('fido:dog', pk=pk)
-        context.update(form=form)
+        context.update(forms=[form])
         return render(request, 'fido/form.html', context)
 
-    context.update(form=EditDogForm(instance=dog))
+    context.update(forms=[EditDogForm(instance=dog)])
     return render(request, 'fido/form.html', context)
 
 

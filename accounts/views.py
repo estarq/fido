@@ -5,6 +5,9 @@ from .forms import NewUserForm
 
 
 def register(request):
+    if request.user.is_authenticated:
+        return redirect('fido:new-shelter')
+
     if request.method == 'POST':
         form = NewUserForm(request.POST)
         if form.is_valid():

@@ -12,20 +12,20 @@
                     <i class="fas {% if pet.sex == 'Male' %}fa-mars{% else %}fa-venus{% endif %} ml-2"></i>
                 </h1>
                 <p class="lead mb-4">
-                    <span class="font-weight-normal">Breed:</span>
-                    <span class="text-muted">{{ pet.breed }}</span>
+                    <span class="font-weight-bold">Breed:</span>
+                    <span>{{ pet.breed }}</span>
                 </p>
                 <p class="lead mb-4">
-                    <span class="font-weight-normal">Age:</span>
-                    <span class="text-muted">{{ pet.age }}</span>
+                    <span class="font-weight-bold">Age:</span>
+                    <span>{{ pet.age }}</span>
                 </p>
-                <p class="lead mb-4 text-muted">{{ pet.description }}</p>
+                <p class="lead mb-4">{{ pet.description }}</p>
                 {% with shelter=pet.shelter %}
-                    <a href="{% url 'fido:shelter' shelter.pk %}" class="btn btn-outline-gray mr-2">
+                    <a href="{% url 'fido:shelter' shelter.pk %}" class="btn btn-outline-primary mr-2">
                         <i class="fas fa-home mr-2"></i>
                         Shelter page
                     </a>
-                    <a href="tel:{{ shelter.phone|phone2numeric }}" class="btn btn-outline-gray">
+                    <a href="tel:{{ shelter.phone|phone2numeric }}" class="btn btn-outline-primary">
                         <i class="fas fa-phone mr-2 horizontal-flip"></i>
                         {{ shelter.phone|phone2numeric|format_phone_number }}
                     </a>

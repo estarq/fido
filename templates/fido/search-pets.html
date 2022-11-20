@@ -62,6 +62,10 @@
         </div>
     </section>
     <script>
+        if (window.location.search.includes('page')) {
+            document.getElementById('pet-search-section').scrollIntoView({behavior: 'smooth'});
+        }
+
         let selects = document.getElementsByTagName('select');
         for (let select of selects) {
             select.addEventListener('change', () => {

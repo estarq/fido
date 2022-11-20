@@ -19,7 +19,7 @@
             </div>
         </div>
     </section>
-    <section class="my-5">
+    <section class="my-5" id="scroll-to-section">
         <div class="container">
             <div class="row justify-content-center pt-3 pb-4">
                 <h1 class="display-4">Pets available at your shelter</h1>
@@ -57,4 +57,9 @@
             {% include "fido/pagination.html" %}
         </div>
     </section>
+    <script>
+        if (window.location.search.includes('page')) {
+            document.getElementById('scroll-to-section').scrollIntoView({behavior: 'smooth'});
+        }
+    </script>
 {% endblock content %}

@@ -28,7 +28,9 @@
                             <span class="fas fa-phone text-white"></span>
                         </div>
                         <h2 class="h5 icon-box-title mb-3">Call</h2>
-                        <a href="tel:{{ shelter.phone }}">{{ shelter.phone }}</a>
+                        <a href="tel:{{ shelter.phone|phone2numeric }}">
+                            {{ shelter.phone|phone2numeric|format_phone_number }}
+                        </a>
                     </div>
                 </div>
                 <div class="col-12 col-sm-4 col-md-4 text-center">
@@ -45,13 +47,14 @@
                 <div class="col-12 col-xl-8 text-center">
                     <p>
                         For more details, visit
-                        <a target="_blank" rel="ugc" href="{{ shelter.website }}"> the shelter's website</a>.
+                        <a target="_blank" rel="ugc noopener nofollow" href="{{ shelter.website }}"
+                           class="font-weight-bold">the shelter's website</a>.
                     </p>
                 </div>
             </div>
         </div>
     </section>
-    <section class="my-5">
+    <section class="my-5" id="scroll-to-section">
         <div class="container">
             <div class="row justify-content-center pt-3 pb-4">
                 <h1 class="display-4">Pets available at this shelter</h1>
@@ -84,4 +87,9 @@
             {% include "fido/pagination.html" %}
         </div>
     </section>
+    <script>
+        if (window.location.search.includes('page')) {
+            document.getElementById('scroll-to-section').scrollIntoView({behavior: 'smooth'});
+        }
+    </script>
 {% endblock content %}

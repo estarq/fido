@@ -58,7 +58,8 @@ textarea, input, select {
     box-shadow: none !important;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-control:active {
     border-color: #e6e7e8 !important;
 }
 

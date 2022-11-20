@@ -3,16 +3,23 @@
     {{ title }} | {{ block.super }}
 {% endblock title %}
 {% block content %}
-    <section>
+    <section class="section section-header pb-8 bg-primary text-white">
         <div class="container">
             <div class="row justify-content-center">
+                <div class="col-12 col-xl-8 text-center">
+                    <h1 class="display-2">{{ headline }}</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container mt-n7 mb-6">
+            <div class="row justify-content-center">
                 <div class="col-12 d-flex align-items-center justify-content-center">
-                    <div class="my-5 w-100 fmxw-500">
-                        <div class="text-center text-md-center mb-4 mt-md-0">
-                            <h1 class="mb-0 h3">{{ headline }}</h1>
-                        </div>
+                    <div class="mt-lg-0 bg-white border rounded border-light p-4 p-lg-5 w-100 fmxw-750">
                         <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
+                            {% for form in forms %}
                                 {% for field in form %}
                                     <div class="form-group">
                                         {{ field.label_tag }}
@@ -22,6 +29,7 @@
                                         {{ field.errors }}
                                     </div>
                                 {% endfor %}
+                            {% endfor %}
                             <button type="submit" class="btn btn-block btn-primary">Save</button>
                         </form>
                     </div>
