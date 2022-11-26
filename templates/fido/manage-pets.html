@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load custom_tags_filters %}
 {% block title %}
     Manage pets | {{ block.super }}
@@ -54,7 +54,7 @@
                     </div>
                 {% endfor %}
             </div>
-            {% include "fido/pagination.html" %}
+            {% include 'fido/pagination.html' %}
         </div>
     </section>
     <script>

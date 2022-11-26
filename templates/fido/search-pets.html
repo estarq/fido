@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block title %}
     Search for adoptable {{ name_plural }} | {{ block.super }}
 {% endblock title %}
@@ -58,7 +58,7 @@
                     </div>
                 {% endfor %}
             </div>
-            {% include "fido/pagination.html" %}
+            {% include 'fido/pagination.html' %}
         </div>
     </section>
     <script>

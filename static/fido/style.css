@@ -14,7 +14,7 @@
     background-color: rgba(36, 46, 76, .1);
 }
 
-.filter-invert {
+.invert-colors {
     filter: invert(1);
 }
 
@@ -54,7 +54,11 @@
     margin-left: -0.75rem;
 }
 
-textarea, input, select {
+textarea,
+input,
+select,
+.page-link:focus,
+.btn:focus {
     box-shadow: none !important;
 }
 
@@ -82,9 +86,4 @@ label,
     #pet-search-section {
         margin-top: -9.5rem !important;
     }
-}
-
-.page-link:focus,
-.btn:focus {
-    box-shadow: none !important;
 }

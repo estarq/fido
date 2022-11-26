@@ -5,7 +5,8 @@ from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.core.paginator import Paginator
 from django.shortcuts import redirect, render, get_object_or_404
 
-from common.decorators import shelter_required
+from common.constants import APPROX_CAT_COUNT, APPROX_DOG_COUNT, PETS_PER_PAGE
+from common.decorators import redirect_if_shelter, shelter_required
 from .forms import (ContactForm, CatForm, DogForm, EditCatForm, EditDogForm, SearchCatsForm,
                     SearchDogsForm, ShelterAddressForm, ShelterForm)
 from .models import Cat, Dog, Shelter, ShelterAddress
@@ -13,50 +14,92 @@ from .models import Cat, Dog, Shelter, ShelterAddress
 
 def contact(request):
     if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'fido/contact.html', {'form': ContactForm(), 'sent': True})
-        return render(request, 'fido/contact.html', {'form': form, 'sent': False})
-
-    return render(request, 'fido/contact.html', {'form': ContactForm()})
+        return contact_post(request)
+    return contact_get(request)
 
 
-@login_required
-def new_shelter(request):
-    try:
-        shelter = Shelter.objects.get(owner=request.user)
-    except Shelter.DoesNotExist:
-        pass
+def contact_get(request):
+    context = {'form': ContactForm()}
+    return render(request, 'fido/contact.html', context)
+
+
+def contact_post(request):
+    form = ContactForm(request.POST)
+    if form.is_valid():
+        form.save()
+        context = {'form': ContactForm(), 'sent': True}
     else:
-        return redirect('fido:shelter', pk=shelter.pk)
+        context = {'form': form, 'sent': False}
+    return render(request, 'fido/contact.html', context)
 
-    context = {
-        'title': 'New shelter',
-        'headline': 'Shelter Details',
-    }
 
-    if request.method == 'POST':
-        shelter_form = ShelterForm(request.POST)
-        address_form = ShelterAddressForm(request.POST)
-        if shelter_form.is_valid() and address_form.is_valid():
-            shelter = shelter_form.save(commit=False)
-            shelter.owner = request.user
-            shelter.save()
-            address = address_form.save(commit=False)
-            address.shelter = shelter
-            address.save()
-            return redirect('fido:shelter', pk=shelter.pk)
-        context.update(forms=[shelter_form, address_form])
-        return render(request, 'fido/form.html', context)
+def cat_page(request, pk):
+    return pet_page(request, pk, Cat)
 
-    context.update(forms=[ShelterForm(), ShelterAddressForm()])
-    return render(request, 'fido/form.html', context)
+
+def dog_page(request, pk):
+    return pet_page(request, pk, Dog)
 
 
 def pet_page(request, pk, model):
     context = {'pet': get_object_or_404(model, pk=pk)}
     return render(request, 'fido/pet.html', context)
+
+
+def search_cats(request):
+    context = {
+        'form': SearchCatsForm(),
+        'pet_url': 'fido:cat',
+        'name_plural': 'cats',
+        'approx_pet_count': APPROX_CAT_COUNT,
+    }
+    return search_pets(request, Cat, context)
+
+
+def search_dogs(request):
+    context = {
+        'form': SearchDogsForm(),
+        'pet_url': 'fido:dog',
+        'name_plural': 'dogs',
+        'approx_pet_count': APPROX_DOG_COUNT,
+    }
+    return search_pets(request, Dog, context)
+
+
+def search_pets(request, model, context):
+    pets = model.objects.all().order_by('-pk')
+    page_obj = Paginator(pets, PETS_PER_PAGE).get_page(request.GET.get('page'))
+    context.update(page_obj=page_obj)
+    return render(request, 'fido/search-pets.html', context)
+
+
+def search_cats_params(request, **params):
+    context = {
+        'pet_url': 'fido:cat',
+        'name_plural': 'cats',
+        'approx_pet_count': APPROX_CAT_COUNT,
+    }
+    return search_pets_params(request, Cat, SearchCatsForm, context, **params)
+
+
+def search_dogs_params(request, **params):
+    context = {
+        'pet_url': 'fido:dog',
+        'name_plural': 'dogs',
+        'approx_pet_count': APPROX_DOG_COUNT,
+    }
+    return search_pets_params(request, Dog, SearchDogsForm, context, **params)
+
+
+def search_pets_params(request, model, form_class, context, **params):
+    params = {k: v.replace('-', ' ') for k, v in params.items()}
+    form = form_class(data=params)
+    if not form.is_valid():
+        raise SuspiciousOperation
+    pets = model.objects.filter(**params).select_related('shelter__shelteraddress').order_by('-pk')
+    page_obj = Paginator(pets, PETS_PER_PAGE).get_page(request.GET.get('page'))
+    context.update(form=form, page_obj=page_obj)
+    return render(request, 'fido/search-pets.html', context)
 
 
 def shelter_page(request, pk):
@@ -69,110 +112,69 @@ def shelter_page(request, pk):
     return render(request, 'fido/shelter.html', context)
 
 
-@login_required
-@shelter_required
-def manage_pets(request):
-    page_obj = page_obj_all_pets(request, request.user.shelter)
-    return render(request, 'fido/manage-pets.html', {'page_obj': page_obj})
-
-
 def page_obj_all_pets(request, shelter):
     cats = Cat.objects.filter(shelter=shelter)
     dogs = Dog.objects.filter(shelter=shelter)
     # cats.union(dogs) makes Dogs appear to be Cats and breaks a custom filter
     pets = sorted(chain(cats, dogs), key=lambda pet: -pet.pk)
-    return Paginator(pets, 12).get_page(request.GET.get('page'))
+    return Paginator(pets, PETS_PER_PAGE).get_page(request.GET.get('page'))
 
 
-def search_cats(request):
-    model = Cat
-    context = {
-        'form': SearchCatsForm(),
-        'pet_url': 'fido:cat',
-        'name_plural': 'cats',
-        'approx_pet_count': 37500,
-    }
-    return search_pets(request, model, context)
+@login_required
+@redirect_if_shelter
+def new_shelter(request):
+    context = {'title': 'New shelter', 'headline': 'Shelter Details'}
+    if request.method == 'POST':
+        return new_shelter_post(request, context)
+    return new_shelter_get(request, context)
 
 
-def search_dogs(request):
-    model = Dog
-    context = {
-        'form': SearchDogsForm(),
-        'pet_url': 'fido:dog',
-        'name_plural': 'dogs',
-        'approx_pet_count': 21700,
-    }
-    return search_pets(request, model, context)
+def new_shelter_get(request, context):
+    context.update(forms=[ShelterForm(), ShelterAddressForm()])
+    return render(request, 'fido/form.html', context)
 
 
-def search_pets(request, model, context):
-    pets = model.objects.all().order_by('-pk')
-    paginator = Paginator(pets, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context.update(page_obj=page_obj)
-    return render(request, 'fido/search-pets.html', context)
-
-
-def search_cats_params(request, **kwargs):
-    model = Cat
-    form_class = SearchCatsForm
-    context = {
-        'pet_url': 'fido:cat',
-        'name_plural': 'cats',
-        'approx_pet_count': 37500,
-    }
-    return search_pets_params(request, model, form_class, context, **kwargs)
-
-
-def search_dogs_params(request, **kwargs):
-    model = Dog
-    form_class = SearchDogsForm
-    context = {
-        'pet_url': 'fido:dog',
-        'name_plural': 'dogs',
-        'approx_pet_count': 21700,
-    }
-    return search_pets_params(request, model, form_class, context, **kwargs)
-
-
-def search_pets_params(request, model, form_class, context, **kwargs):
-    kwargs = {k: v.replace('-', ' ') for k, v in kwargs.items()}
-    form = form_class(data=kwargs)
-    if not form.is_valid():
-        raise SuspiciousOperation
-    pets = model.objects.filter(**kwargs).select_related('shelter__shelteraddress').order_by('-pk')
-    paginator = Paginator(pets, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context.update(form=form, page_obj=page_obj)
-    return render(request, 'fido/search-pets.html', context)
+def new_shelter_post(request, context):
+    shelter_form = ShelterForm(request.POST)
+    address_form = ShelterAddressForm(request.POST)
+    if shelter_form.is_valid() and address_form.is_valid():
+        shelter = shelter_form.save(commit=False)
+        address = address_form.save(commit=False)
+        shelter.owner = request.user
+        address.shelter = shelter
+        shelter.save()
+        address.save()
+        return redirect('fido:shelter', pk=shelter.pk)
+    context.update(forms=[shelter_form, address_form])
+    return render(request, 'fido/form.html', context)
 
 
 @login_required
 @shelter_required
 def edit_shelter(request):
-    context = {
-        'title': 'Manage shelter',
-        'headline': 'Shelter Details',
-    }
-
+    context = {'title': 'Manage shelter', 'headline': 'Shelter Details'}
     if request.method == 'POST':
-        shelter_form = ShelterForm(request.POST)
-        address_form = ShelterAddressForm(request.POST)
-        if shelter_form.is_valid() and address_form.is_valid():
-            shelter = Shelter.objects.filter(owner=request.user)
-            address = ShelterAddress.objects.filter(shelter=shelter.first())
-            shelter.update(**shelter_form.cleaned_data)
-            address.update(**address_form.cleaned_data)
-            return redirect('fido:shelter', pk=shelter.first().pk)
-        context.update(forms=[shelter_form, address_form])
-        return render(request, 'fido/form.html', context)
+        return edit_shelter_post(request, context)
+    return edit_shelter_get(request, context)
 
-    shelter = Shelter.objects.get(owner=request.user)
-    shelter_form = ShelterForm(instance=shelter)
-    address_form = ShelterAddressForm(instance=shelter.shelteraddress)
+
+def edit_shelter_get(request, context):
+    shelter = Shelter.objects.filter(owner=request.user).select_related('shelteraddress')
+    shelter_form = ShelterForm(instance=shelter.first())
+    address_form = ShelterAddressForm(instance=shelter.first().shelteraddress)
+    context.update(forms=[shelter_form, address_form])
+    return render(request, 'fido/form.html', context)
+
+
+def edit_shelter_post(request, context):
+    shelter_form = ShelterForm(request.POST)
+    address_form = ShelterAddressForm(request.POST)
+    if shelter_form.is_valid() and address_form.is_valid():
+        shelter = Shelter.objects.filter(owner=request.user)
+        address = ShelterAddress.objects.filter(shelter=shelter.first())
+        shelter.update(**shelter_form.cleaned_data)
+        address.update(**address_form.cleaned_data)
+        return redirect('fido:shelter', pk=shelter.first().pk)
     context.update(forms=[shelter_form, address_form])
     return render(request, 'fido/form.html', context)
 
@@ -180,112 +182,107 @@ def edit_shelter(request):
 @login_required
 @shelter_required
 def remove_shelter(request):
-    shelter = Shelter.objects.get(owner=request.user)
     if request.method == 'POST':
-        shelter.delete()
-        return redirect('fido:homepage')
+        return remove_shelter_post(request)
+    return remove_shelter_get(request)
 
+
+def remove_shelter_get(request):
+    shelter = request.user.shelter
     cat_count = Cat.objects.filter(shelter=shelter).count()
     dog_count = Dog.objects.filter(shelter=shelter).count()
-    context = {
-        'shelter': shelter,
-        'count': cat_count + dog_count,
-    }
+    context = {'shelter': shelter, 'count': cat_count + dog_count}
     return render(request, 'fido/remove-shelter.html', context)
 
 
+def remove_shelter_post(request):
+    request.user.shelter.delete()
+    return redirect('fido:homepage')
+
+
 @login_required
 @shelter_required
+def manage_pets(request):
+    page_obj = page_obj_all_pets(request, request.user.shelter)
+    return render(request, 'fido/manage-pets.html', {'page_obj': page_obj})
+
+
 def new_cat(request):
-    context = {
-        'title': 'New cat',
-        'headline': 'Cat Details',
-    }
-
-    if request.method == 'POST':
-        form = CatForm(request.POST, request.FILES)
-        if form.is_valid():
-            cat = form.save(commit=False)
-            cat.shelter = request.user.shelter
-            cat.save()
-            return redirect('fido:cat', pk=cat.pk)
-        context.update(forms=[form])
-        return render(request, 'fido/form.html', context)
-
-    context.update(forms=[CatForm()])
-    return render(request, 'fido/form.html', context)
+    context = {'title': 'New cat', 'headline': 'Cat Details'}
+    return new_pet(request, CatForm, 'fido:cat', context)
 
 
-@login_required
-@shelter_required
 def new_dog(request):
-    context = {
-        'title': 'New dog',
-        'headline': 'Dog Details',
-    }
-
-    if request.method == 'POST':
-        form = DogForm(request.POST, request.FILES)
-        if form.is_valid():
-            dog = form.save(commit=False)
-            dog.shelter = request.user.shelter
-            dog.save()
-            return redirect('fido:dog', pk=dog.pk)
-        context.update(forms=[form])
-        return render(request, 'fido/form.html', context)
-
-    context.update(forms=[DogForm()])
-    return render(request, 'fido/form.html', context)
+    context = {'title': 'New dog', 'headline': 'Dog Details'}
+    return new_pet(request, DogForm, 'fido:dog', context)
 
 
 @login_required
 @shelter_required
+def new_pet(request, form_class, pet_url, context):
+    if request.method == 'POST':
+        return new_pet_post(request, form_class, pet_url, context)
+    return new_pet_get(request, form_class, context)
+
+
+def new_pet_get(request, form_class, context):
+    context.update(forms=[form_class()])
+    return render(request, 'fido/form.html', context)
+
+
+def new_pet_post(request, form_class, pet_url, context):
+    form = form_class(request.POST, request.FILES)
+    if form.is_valid():
+        pet = form.save(commit=False)
+        pet.shelter = request.user.shelter
+        pet.save()
+        return redirect(pet_url, pk=pet.pk)
+    context.update(forms=[form])
+    return render(request, 'fido/form.html', context)
+
+
 def edit_cat(request, pk):
-    cat = get_object_or_404(Cat, pk=pk)
-    if cat.shelter != request.user.shelter:
-        raise PermissionDenied
+    context = {'title': 'Edit cat', 'headline': 'Cat Details'}
+    return edit_pet(request, pk, Cat, EditCatForm, 'fido:cat', context)
 
-    context = {
-        'title': 'Edit cat',
-        'headline': 'Cat Details',
-    }
 
-    if request.method == 'POST':
-        form = EditCatForm(request.POST, request.FILES)
-        if form.is_valid():
-            cat = Cat.objects.filter(pk=pk)
-            cat.update(**form.cleaned_data)
-            return redirect('fido:cat', pk=pk)
-        context.update(forms=[form])
-        return render(request, 'fido/form.html', context)
-
-    context.update(forms=[EditCatForm(instance=cat)])
-    return render(request, 'fido/form.html', context)
+def edit_dog(request, pk):
+    context = {'title': 'Edit dog', 'headline': 'Dog Details'}
+    return edit_pet(request, pk, Dog, EditDogForm, 'fido:dog', context)
 
 
 @login_required
 @shelter_required
-def edit_dog(request, pk):
-    dog = get_object_or_404(Dog, pk=pk)
-    if dog.shelter != request.user.shelter:
+def edit_pet(request, pk, model, form_class, pet_url, context):
+    pet = get_object_or_404(model, pk=pk)
+    if pet.shelter != request.user.shelter:
         raise PermissionDenied
-
-    context = {
-        'title': 'Edit dog',
-        'headline': 'Dog Details',
-    }
-
     if request.method == 'POST':
-        form = EditDogForm(request.POST, request.FILES)
-        if form.is_valid():
-            dog = Dog.objects.filter(pk=pk)
-            dog.update(**form.cleaned_data)
-            return redirect('fido:dog', pk=pk)
-        context.update(forms=[form])
-        return render(request, 'fido/form.html', context)
+        return edit_pet_post(request, pk, model, form_class, pet_url, context)
+    return edit_pet_get(request, pet, form_class, context)
 
-    context.update(forms=[EditDogForm(instance=dog)])
+
+def edit_pet_get(request, pet, form_class, context):
+    context.update(forms=[form_class(instance=pet)])
     return render(request, 'fido/form.html', context)
+
+
+def edit_pet_post(request, pk, model, form_class, pet_url, context):
+    form = form_class(request.POST, request.FILES)
+    if form.is_valid():
+        pet = model.objects.filter(pk=pk)
+        pet.update(**form.cleaned_data)
+        return redirect(pet_url, pk=pk)
+    context.update(forms=[form])
+    return render(request, 'fido/form.html', context)
+
+
+def remove_cat(request, pk):
+    return remove_pet(request, pk, Cat)
+
+
+def remove_dog(request, pk):
+    return remove_pet(request, pk, Dog)
 
 
 @login_required
@@ -294,9 +291,7 @@ def remove_pet(request, pk, model):
     pet = get_object_or_404(model, pk=pk)
     if pet.shelter != request.user.shelter:
         raise PermissionDenied
-
     if request.method == 'POST':
         pet.delete()
         return redirect('fido:manage-pets')
-
     return render(request, 'fido/remove-pet.html', {'pet': pet})

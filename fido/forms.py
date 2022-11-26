@@ -1,42 +1,62 @@
-from django.forms import ChoiceField, FileInput, ImageField, ModelForm
+from django import forms
 
 from common.constants import US_STATES
-from common.forms.models import StyledForm
-from .models import Contact, Cat, Dog, Shelter, ShelterAddress
+from common.forms.models import StyledModelForm
+from .models import Message, Cat, Dog, Shelter, ShelterAddress
 
 
-class ContactForm(StyledForm, ModelForm):
+class ContactForm(StyledModelForm):
     class Meta:
-        model = Contact
-        fields = '__all__'
+        model = Message
+        fields = ['name', 'email', 'message']
 
 
-class ShelterForm(StyledForm, ModelForm):
+class SearchPetsForm(StyledModelForm):
+    shelter__shelteraddress__state = forms.ChoiceField(choices=US_STATES, label='State')
+
+    class Meta:
+        fields = ['breed', 'age', 'sex', 'shelter__shelteraddress__state']
+
+
+class SearchCatsForm(SearchPetsForm):
+    class Meta(SearchPetsForm.Meta):
+        model = Cat
+
+
+class SearchDogsForm(SearchPetsForm):
+    class Meta(SearchPetsForm.Meta):
+        model = Dog
+
+
+class ShelterForm(StyledModelForm):
     class Meta:
         model = Shelter
-        exclude = ['owner']
+        fields = ['name', 'description', 'phone', 'email', 'website']
 
 
-class ShelterAddressForm(StyledForm, ModelForm):
+class ShelterAddressForm(StyledModelForm):
     class Meta:
         model = ShelterAddress
-        exclude = ['shelter']
+        fields = ['street', 'city', 'zip_code', 'state']
 
 
-class CatForm(StyledForm, ModelForm):
+class PetForm(StyledModelForm):
     class Meta:
+        fields = ['name', 'description', 'photo', 'breed', 'age', 'sex']
+
+
+class CatForm(PetForm):
+    class Meta(PetForm.Meta):
         model = Cat
-        exclude = ['shelter']
 
 
-class DogForm(StyledForm, ModelForm):
-    class Meta:
+class DogForm(PetForm):
+    class Meta(PetForm.Meta):
         model = Dog
-        exclude = ['shelter']
 
 
-class EditPetForm(ModelForm):
-    photo = ImageField(required=False, widget=FileInput)
+class EditPetForm(StyledModelForm):
+    photo = forms.ImageField(required=False, widget=forms.FileInput)
 
     def clean(self):
         if not self.cleaned_data['photo']:
@@ -50,20 +70,3 @@ class EditCatForm(EditPetForm, CatForm):
 
 class EditDogForm(EditPetForm, DogForm):
     pass
-
-
-class SearchPetsForm(StyledForm):
-    shelter__shelteraddress__state = ChoiceField(choices=US_STATES, label='State')
-
-    class Meta:
-        fields = ['breed', 'age', 'sex', 'shelter__shelteraddress__state']
-
-
-class SearchCatsForm(SearchPetsForm, ModelForm):
-    class Meta(SearchPetsForm.Meta):
-        model = Cat
-
-
-class SearchDogsForm(SearchPetsForm, ModelForm):
-    class Meta(SearchPetsForm.Meta):
-        model = Dog

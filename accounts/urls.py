@@ -7,6 +7,9 @@ from . import forms, views
 app_name = 'accounts'
 
 urlpatterns = [
+    path('privacy/', TemplateView.as_view(template_name='accounts/privacy.html'), name='privacy'),
+    path('tos/', TemplateView.as_view(template_name='accounts/tos.html'), name='tos'),
+    path('register/', views.register, name='register'),
     path(
         'login/',
         auth_views.LoginView.as_view(
@@ -18,7 +21,4 @@ urlpatterns = [
         name='login',
     ),
     path('logout/', auth_views.LogoutView.as_view(next_page='fido:homepage'), name='logout'),
-    path('privacy/', TemplateView.as_view(template_name='accounts/privacy.html'), name='privacy'),
-    path('register/', views.register, name='register'),
-    path('tos/', TemplateView.as_view(template_name='accounts/tos.html'), name='tos'),
 ]
