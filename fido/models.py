@@ -31,6 +31,7 @@ class ShelterAddress(models.Model):
 
     class Meta:
         verbose_name_plural = 'Shelter addresses'
+        indexes = [models.Index(fields=['state', 'shelter'])]
 
     def __str__(self):
         return f'{self.street}, {self.city}, {self.state} {self.zip_code}'
@@ -54,7 +55,13 @@ class Cat(Pet):
     age = models.CharField(max_length=6, choices=CAT_AGE_RANGES, default=CAT_AGE_RANGES[0][0])
     breed = models.CharField(max_length=13, choices=CAT_BREEDS, default=CAT_BREEDS[0][0])
 
+    class Meta:
+        indexes = [models.Index(fields=['sex', 'shelter', 'age', 'breed'])]
+
 
 class Dog(Pet):
     age = models.CharField(max_length=6, choices=DOG_AGE_RANGES, default=DOG_AGE_RANGES[0][0])
     breed = models.CharField(max_length=18, choices=DOG_BREEDS, default=DOG_BREEDS[0][0])
+
+    class Meta:
+        indexes = [models.Index(fields=['sex', 'shelter', 'age', 'breed'])]
